@@ -1,25 +1,71 @@
-<DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Looping GIF Background</title>
+  <title>Fatman Animation Redirect</title>
   <style>
     html, body {
       height: 100%;
       margin: 0;
       padding: 0;
       overflow: hidden;
+      background-color: #000;
+      cursor: pointer;
     }
 
-    body {
-      background: url('https://CODY-VICK.github.io/homepage/images/fatmanbreathe.gif') no-repeat center center fixed;
-      background-size: cover;
-      background-attachment: fixed;
+    img {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: opacity 0.3s ease-in-out;
     }
   </style>
 </head>
 <body>
+  <!-- Default GIF -->
+  <img id="fatman" 
+       src="https://CODY-VICK.github.io/homepage/images/fatmanbreathe.gif" 
+       alt="Fatman background">
+
+  <!-- Load gifler library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gifler/0.1.0/gifler.min.js"></script>
+
+  <script>
+    const img = document.getElementById("fatman");
+    const breatheGif = "https://CODY-VICK.github.io/homepage/images/fatmanbreathe.gif";
+    const lungeGif = "https://CODY-VICK.github.io/homepage/images/fatmanlunge.gif";
+    const redirectUrl = "epiccool.html";
+    let clicked = false;
+
+    // Function to calculate GIF duration
+    function getGifDuration(url) {
+      return new Promise((resolve) => {
+        gifler(url).get((anim) => {
+          const duration = anim._frames.reduce((sum, f) => sum + f.delay, 0);
+          resolve(duration * 10); // convert from hundredths to ms
+        });
+      });
+    }
+
+    img.addEventListener("click", async () => {
+      if (clicked) return;
+      clicked = true;
+
+      img.src = lungeGif;
+
+      // Measure duration
+      const duration = await getGifDuration(lungeGif);
+
+      // Redirect after GIF completes
+      setTimeout(() => {
+        window.location.href = redirectUrl;
+      }, duration);
+    });
+  </script>
 </body>
 </html>
 
