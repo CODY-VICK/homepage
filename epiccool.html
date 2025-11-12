@@ -36,7 +36,7 @@
       z-index: 10;
     }
 
-    /* NEW: THE TRUTH text overlay */
+    /* THE TRUTH text overlay */
     #the-truth {
       position: absolute;
       right: 20px;
@@ -48,11 +48,31 @@
       user-select: none;
       z-index: 10;
     }
+
+    /* AUDIO PLAYER (new, non-intrusive) */
+    .audio-player {
+      position: fixed;
+      bottom: 15px;
+      left: 15px;
+      opacity: 0.7;
+      z-index: 20; /* above everything but not intrusive */
+      transition: opacity 0.3s ease;
+    }
+
+    .audio-player:hover {
+      opacity: 1;
+    }
+
+    .audio-player audio {
+      width: 200px;
+      background: transparent;
+      outline: none;
+    }
   </style>
 </head>
 <body>
   <div id="title">CODY'S EPIC ART!!!</div>
-  <div id="the-truth">THE TRUTH</div> <!-- overlay text -->
+  <div id="the-truth">THE TRUTH</div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
   <script>
@@ -130,6 +150,14 @@
       Render.lookAt(render, { min: { x: 0, y: 0 }, max: { x: window.innerWidth, y: window.innerHeight } });
     });
   </script>
+
+  <!-- Transparent bottom-left audio player -->
+  <div class="audio-player">
+    <audio controls preload="none">
+      <source src="https://CODY-VICK.github.io/homepage/images/BigXthaplug%20-%20The%20Largest%20(Official%20Lyric%20Video).mp3" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
+  </div>
 </body>
 </html>
 
