@@ -1,1 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Repeating GIF Background</title>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-image: url('thetruth.gif');
+      background-repeat: repeat; /* repeats horizontally and vertically */
+      background-size: auto;     /* keeps original GIF size */
+      background-position: top left; /* start at top left */
+      overflow: hidden;          /* prevents scrollbars */
+    }
+  </style>
+</head>
+<body>
+  <!-- Optional content can go here -->
+</body>
+</html>
 
