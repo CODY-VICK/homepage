@@ -35,14 +35,28 @@
       text-shadow: 2px 2px 4px #000;
       z-index: 10;
     }
+
+    /* NEW: THE TRUTH text overlay */
+    #the-truth {
+      position: absolute;
+      right: 20px;
+      bottom: 70px; /* slightly raised */
+      font-size: 20px;
+      font-weight: bold;
+      color: red;
+      cursor: pointer;
+      user-select: none;
+      z-index: 10;
+    }
   </style>
 </head>
 <body>
   <div id="title">CODY'S EPIC ART!!!</div>
+  <div id="the-truth">THE TRUTH</div> <!-- overlay text -->
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
   <script>
-    const { Engine, Render, Runner, World, Bodies, Mouse, MouseConstraint, Events } = Matter;
+    const { Engine, Render, Runner, World, Bodies, Mouse, MouseConstraint } = Matter;
 
     const engine = Engine.create();
     const world = engine.world;
@@ -101,42 +115,22 @@
     World.add(world, mouseConstraint);
     render.mouse = mouse;
 
-    // Draw "THE TRUTH" **behind the images**
-    Events.on(render, 'beforeRender', () => {
-      const ctx = render.context;
-      ctx.save();
-      ctx.font = "bold 64px Arial";
-      ctx.fillStyle = "red";
-      ctx.textAlign = "center";
-      ctx.fillText("THE TRUTH", window.innerWidth / 2, window.innerHeight - 80);
-      ctx.restore();
-    });
-
-    // Resize
-    window.addEventListener('resize', () => {
-      Render.lookAt(render, { min: { x: 0, y: 0 }, max: { x: window.innerWidth, y: window.innerHeight } });
-    });
-
     // Title click
     document.getElementById('title').onclick = () => {
       window.location.href = 'https://www.instagram.com/if_you_find_him/';
     };
 
-    // Canvas click to detect "THE TRUTH"
-    render.canvas.addEventListener('click', function(event) {
-      const x = event.clientX;
-      const y = event.clientY;
-      const textX = window.innerWidth / 2;
-      const textY = window.innerHeight - 80;
-      const textWidth = 400;
-      const textHeight = 80;
+    // THE TRUTH click
+    document.getElementById('the-truth').onclick = () => {
+      window.location.href = 'the_truth.html';
+    };
 
-      if (x >= textX - textWidth / 2 && x <= textX + textWidth / 2 &&
-          y >= textY - textHeight / 2 && y <= textY + textHeight / 2) {
-        window.location.href = 'the_truth.html';
-      }
+    // Resize
+    window.addEventListener('resize', () => {
+      Render.lookAt(render, { min: { x: 0, y: 0 }, max: { x: window.innerWidth, y: window.innerHeight } });
     });
   </script>
 </body>
 </html>
+
 
