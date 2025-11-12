@@ -38,23 +38,9 @@
     const lungeGif = "https://CODY-VICK.github.io/homepage/images/fatmanlunge.gif";
     const redirectUrl = "epiccool.html";
 
+    // Adjust to match your lunge GIF duration (in milliseconds)
+    const lungeDuration = 1500;
+
     let clicked = false;
 
-    // Adjust this duration to exactly match your lunge GIF’s length (in milliseconds)
-    const lungeDuration = 1500; // e.g. 1.5 seconds
-
-    img.addEventListener("click", () => {
-      if (clicked) return;
-      clicked = true;
-
-      // Change to the lunge GIF
-      img.src = lungeGif;
-
-      // Wait for the lunge GIF to finish playing, then redirect
-      setTimeout(() => {
-        window.location.href = redirectUrl;
-      }, lungeDuration);
-    });
-  </script>
-</body>
-</html>
+    i
