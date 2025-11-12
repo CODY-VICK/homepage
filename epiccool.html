@@ -18,6 +18,8 @@
       display: block;
       width: 100%;
       height: 100%;
+      z-index: 1; /* above background, below HTML text if needed */
+      position: relative;
     }
 
     #title {
@@ -25,22 +27,22 @@
       top: 20px;
       left: 50%;
       transform: translateX(-50%);
-      color: #d8b3ff; /* light purple */
+      color: #d8b3ff;
       font-size: 36px;
       font-weight: bold;
       cursor: pointer;
       user-select: none;
       text-shadow: 2px 2px 4px #000;
-      z-index: 10;
+      z-index: 10; /* stays above canvas */
     }
   </style>
 </head>
 <body>
   <div id="title">CODY'S EPIC ART!!!</div>
-  
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
   <script>
-    const { Engine, Render, Runner, World, Bodies, Mouse, MouseConstraint } = Matter;
+    const { Engine, Render, Runner, World, Bodies, Mouse, MouseConstraint, Events } = Matter;
 
     const engine = Engine.create();
     const world = engine.world;
@@ -61,6 +63,7 @@
     const runner = Runner.create();
     Runner.run(runner, engine);
 
+    // Walls
     const walls = [
       Bodies.rectangle(window.innerWidth / 2, window.innerHeight + 25, window.innerWidth, 50, { isStatic: true }),
       Bodies.rectangle(-25, window.innerHeight / 2, 50, window.innerHeight, { isStatic: true }),
@@ -69,6 +72,7 @@
     ];
     World.add(world, walls);
 
+    // Function to create image bodies
     function createImage(x, y, width, height, imgSrc) {
       const body = Bodies.rectangle(x, y, width, height, {
         render: {
@@ -83,6 +87,7 @@
       return body;
     }
 
+    // Images
     const images = [
       createImage(200, 100, 120, 80, 'https://CODY-VICK.github.io/homepage/images/doom.png'),
       createImage(500, 50, 120, 80, 'https://CODY-VICK.github.io/homepage/images/face.png'),
@@ -92,6 +97,7 @@
       createImage(window.innerWidth / 2 + 100, 60, 120, 80, 'https://CODY-VICK.github.io/homepage/images/sir.png')
     ];
 
+    // Mouse control
     const mouse = Mouse.create(render.canvas);
     const mouseConstraint = MouseConstraint.create(engine, {
       mouse,
@@ -100,6 +106,18 @@
     World.add(world, mouseConstraint);
     render.mouse = mouse;
 
+    // Draw "THE TRUTH" behind images on every frame
+    Events.on(render, 'beforeRender', () => {
+      const ctx = render.context;
+      ctx.save();
+      ctx.font = "bold 64px Arial";
+      ctx.fillStyle = "red";
+      ctx.textAlign = "center";
+      ctx.fillText("THE TRUTH", window.innerWidth / 2, window.innerHeight - 80);
+      ctx.restore();
+    });
+
+    // Resize handling
     window.addEventListener('resize', () => {
       Render.lookAt(render, {
         min: { x: 0, y: 0 },
@@ -107,44 +125,30 @@
       });
     });
 
-    // Make the title clickable
+    // Title click
     const title = document.getElementById('title');
     title.onclick = () => {
       window.location.href = 'https://www.instagram.com/if_you_find_him/';
     };
+
+    // Make canvas text clickable using mouse events
+    render.canvas.addEventListener('click', function(event) {
+      const x = event.clientX;
+      const y = event.clientY;
+
+      // Simple bounding box for "THE TRUTH"
+      const textX = window.innerWidth / 2;
+      const textY = window.innerHeight - 80;
+      const textWidth = 400; // approx width of text
+      const textHeight = 80; // approx height of text
+
+      if (x >= textX - textWidth/2 && x <= textX + textWidth/2 &&
+          y >= textY - textHeight/2 && y <= textY + textHeight/2) {
+        window.location.href = 'the_truth.html';
+      }
+    });
   </script>
-  <!-- Add this inside the <body>, below everything else -->
-<div id="bottom-link">Click here to see THE TRUTH</div>
-
-<style>
-  #bottom-link {
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    color: red;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
-    user-select: none;
-    text-shadow: 2px 2px 4px #000;
-    z-index: 10;
-  }
-
-  #bottom-link:hover {
-    text-decoration: underline;
-  }
-</style>
-
-<script>
-  const bottomLink = document.getElementById('bottom-link');
-  bottomLink.onclick = () => {
-    window.location.href = 'the_truth.html';
-  };
-</script>
-
 </body>
-</html>  
-
+</html>
 
 
