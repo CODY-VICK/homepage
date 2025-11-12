@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Fatman Animation Redirect</title>
   <style>
     html, body {
@@ -15,142 +15,46 @@
       cursor: pointer;
     }
 
-    canvas {
+    img {
       position: absolute;
       top: 50%;
       left: 50%;
       width: 100vw;
       height: 100vh;
-      transform: translate(-50%, -50%);
       object-fit: cover;
-      display: block;
+      transform: translate(-50%, -50%);
+      transition: opacity 0.3s ease-in-out;
     }
   </style>
 </head>
 <body>
-  <canvas id="fatmanCanvas" aria-label="Fatman animation"></canvas>
-
-  <!-- gifler -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gifler/0.1.0/gifler.min.js"></script>
+  <img id="fatman"
+       src="https://CODY-VICK.github.io/homepage/images/fatmanbreathe.gif"
+       alt="Fatman breathing">
 
   <script>
-    const canvas = document.getElementById('fatmanCanvas');
-    const ctx = canvas.getContext('2d');
-    const breatheGif = 'https://CODY-VICK.github.io/homepage/images/fatmanbreathe.gif';
-    const lungeGif   = 'https://CODY-VICK.github.io/homepage/images/fatmanlunge.gif';
-    const redirectUrl = 'epiccool.html';
+    const img = document.getElementById("fatman");
+    const breatheGif = "https://CODY-VICK.github.io/homepage/images/fatmanbreathe.gif";
+    const lungeGif = "https://CODY-VICK.github.io/homepage/images/fatmanlunge.gif";
+    const redirectUrl = "epiccool.html";
+
     let clicked = false;
-    let breatheAnim = null;
 
-    // Make sure canvas rendering size matches CSS size (handles high-DPI)
-    function resizeCanvas() {
-      const ratio = window.devicePixelRatio || 1;
-      const w = window.innerWidth;
-      const h = window.innerHeight;
-      canvas.style.width = w + 'px';
-      canvas.style.height = h + 'px';
-      canvas.width = Math.floor(w * ratio);
-      canvas.height = Math.floor(h * ratio);
-      ctx.setTransform(ratio, 0, 0, ratio, 0, 0); // draw at CSS pixels
-    }
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
+    // Adjust this duration to exactly match your lunge GIF’s length (in milliseconds)
+    const lungeDuration = 1500; // e.g. 1.5 seconds
 
-    // Play a GIF on the canvas and return the anim object
-    function playGifOnCanvas(url, loop = true) {
-      return new Promise((resolve, reject) => {
-        try {
-          gifler(url).get((anim) => {
-            // Ensure canvas size is up-to-date
-            resizeCanvas();
-
-            // Draw frames scaled to canvas
-            anim.animateInCanvas(canvas);
-            anim.onDrawFrame = (ctxLocal, frame) => {
-              // Clear and draw frame buffer scaled to canvas CSS size
-              ctxLocal.clearRect(0, 0, canvas.width, canvas.height);
-              // drawImage expects buffer (frame.buffer) which is a canvas/image
-              ctxLocal.drawImage(frame.buffer, 0, 0, canvas.width / (window.devicePixelRatio || 1), canvas.height / (window.devicePixelRatio || 1));
-            };
-
-            // Control looping if requested
-            if (loop === false && anim.setLoopCount) {
-              // gifler doesn't expose API consistently; _loopCount may exist.
-              try { anim._loopCount = 1; } catch (e) {}
-            }
-
-            anim.play();
-            resolve(anim);
-          });
-        } catch (err) {
-          reject(err);
-        }
-      });
-    }
-
-    // Helper: compute GIF duration from anim._frames (delay in hundredths of second)
-    function computeAnimDurationMs(anim) {
-      try {
-        if (!anim || !anim._frames || !anim._frames.length) return null;
-        const totalHundredths = anim._frames.reduce((sum, f) => sum + (f.delay || 0), 0);
-        return totalHundredths * 10; // convert to ms
-      } catch (e) {
-        return null;
-      }
-    }
-
-    // Play breathing GIF (looping)
-    playGifOnCanvas(breatheGif, true)
-      .then(anim => {
-        breatheAnim = anim;
-        console.log('Breathing GIF started.');
-      })
-      .catch(err => {
-        console.error('Failed to play breathing GIF:', err);
-      });
-
-    // Click handler: play lunge gif once then redirect
-    canvas.addEventListener('click', async () => {
+    img.addEventListener("click", () => {
       if (clicked) return;
       clicked = true;
-      console.log('Canvas clicked — switching to lunge GIF.');
 
-      // Stop breathing animation if possible
-      try {
-        if (breatheAnim && typeof breatheAnim.stop === 'function') {
-          breatheAnim.stop();
-        }
-      } catch (e) {
-        console.warn('Could not stop breatheAnim:', e);
-      }
+      // Change to the lunge GIF
+      img.src = lungeGif;
 
-      // Play lunge animation
-      try {
-        const lungeAnim = await playGifOnCanvas(lungeGif, false);
-        // compute duration
-        const duration = computeAnimDurationMs(lungeAnim);
-        console.log('Lunge anim frames:', lungeAnim._frames ? lungeAnim._frames.length : 'unknown', 'duration(ms):', duration);
-
-        // If we got a duration, redirect after that. Otherwise use fallback.
-        const fallback = 1200; // fallback ms if we can't compute duration
-        const waitMs = (typeof duration === 'number' && duration > 0) ? duration + 40 : fallback; // small buffer
-
-        // Safety: also set a max wait so user isn't stuck
-        const maxWait = 5000;
-        const finalWait = Math.min(waitMs, maxWait);
-
-        console.log('Redirect scheduled in', finalWait, 'ms');
-        setTimeout(() => {
-          window.location.href = redirectUrl;
-        }, finalWait);
-
-      } catch (err) {
-        console.error('Failed to play lunge GIF:', err);
-        // fallback immediate redirect
+      // Wait for the lunge GIF to finish playing, then redirect
+      setTimeout(() => {
         window.location.href = redirectUrl;
-      }
+      }, lungeDuration);
     });
   </script>
 </body>
 </html>
-
