@@ -113,6 +113,36 @@
       window.location.href = 'https://www.instagram.com/if_you_find_him/';
     };
   </script>
+  <!-- Add this inside the <body>, below everything else -->
+<div id="bottom-link">Click here to see THE TRUTH</div>
+
+<style>
+  #bottom-link {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: red;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    user-select: none;
+    text-shadow: 2px 2px 4px #000;
+    z-index: 10;
+  }
+
+  #bottom-link:hover {
+    text-decoration: underline;
+  }
+</style>
+
+<script>
+  const bottomLink = document.getElementById('bottom-link');
+  bottomLink.onclick = () => {
+    window.location.href = 'the_truth.html';
+  };
+</script>
+
 </body>
 </html>  
 
