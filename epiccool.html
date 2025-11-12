@@ -36,6 +36,7 @@
       z-index: 10;
     }
 
+    /* NEW: THE TRUTH text overlay */
     #the-truth {
       position: absolute;
       right: 20px;
@@ -47,21 +48,11 @@
       user-select: none;
       z-index: 10;
     }
-
-    /* hidden audio */
-    #bg-audio {
-      display: none;
-    }
   </style>
 </head>
 <body>
   <div id="title">CODY'S EPIC ART!!!</div>
-  <div id="the-truth">THE TRUTH</div>
-
-  <!-- Hidden looping background audio -->
-  <audio id="bg-audio" loop preload="auto" playsinline>
-    <source src="BigXthaplug - The Largest (Official Lyric Video).mp3" type="audio/mpeg">
-  </audio>
+  <div id="the-truth">THE TRUTH</div> <!-- overlay text -->
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
   <script>
@@ -86,6 +77,7 @@
     const runner = Runner.create();
     Runner.run(runner, engine);
 
+    // Walls
     const walls = [
       Bodies.rectangle(window.innerWidth / 2, window.innerHeight + 25, window.innerWidth, 50, { isStatic: true }),
       Bodies.rectangle(-25, window.innerHeight / 2, 50, window.innerHeight, { isStatic: true }),
@@ -94,6 +86,7 @@
     ];
     World.add(world, walls);
 
+    // Create image bodies
     function createImage(x, y, width, height, imgSrc) {
       const body = Bodies.rectangle(x, y, width, height, {
         render: {
@@ -113,6 +106,7 @@
       createImage(window.innerWidth / 2 + 100, 60, 120, 80, 'https://CODY-VICK.github.io/homepage/images/sir.png')
     ];
 
+    // Mouse control
     const mouse = Mouse.create(render.canvas);
     const mouseConstraint = MouseConstraint.create(engine, {
       mouse,
@@ -121,39 +115,20 @@
     World.add(world, mouseConstraint);
     render.mouse = mouse;
 
+    // Title click
     document.getElementById('title').onclick = () => {
       window.location.href = 'https://www.instagram.com/if_you_find_him/';
     };
 
+    // THE TRUTH click
     document.getElementById('the-truth').onclick = () => {
       window.location.href = 'the_truth.html';
     };
 
+    // Resize
     window.addEventListener('resize', () => {
-      Render.lookAt(render, {
-        min: { x: 0, y: 0 },
-        max: { x: window.innerWidth, y: window.innerHeight }
-      });
+      Render.lookAt(render, { min: { x: 0, y: 0 }, max: { x: window.innerWidth, y: window.innerHeight } });
     });
-
-    // Background music autoplay (non-intrusive)
-    const audio = document.getElementById('bg-audio');
-    function tryPlayAudio() {
-      const p = audio.play();
-      if (p) p.catch(() => {
-        // if autoplay is blocked, wait for first user interaction
-        const start = () => {
-          audio.play().catch(()=>{});
-          window.removeEventListener('click', start);
-          window.removeEventListener('keydown', start);
-          window.removeEventListener('touchstart', start);
-        };
-        window.addEventListener('click', start, { once: true });
-        window.addEventListener('keydown', start, { once: true });
-        window.addEventListener('touchstart', start, { once: true });
-      });
-    }
-    tryPlayAudio();
   </script>
 </body>
 </html>
