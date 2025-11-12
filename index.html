@@ -15,60 +15,65 @@
       cursor: pointer;
     }
 
-    img {
+    canvas {
       position: absolute;
       top: 50%;
       left: 50%;
       width: 100vw;
       height: 100vh;
-      object-fit: cover; /* ensures it fills screen without distortion */
       transform: translate(-50%, -50%);
-      transition: opacity 0.3s ease-in-out;
+      object-fit: cover;
     }
   </style>
 </head>
 <body>
-  <!-- Default GIF -->
-  <img id="fatman" 
-       src="https://CODY-VICK.github.io/homepage/images/fatmanbreathe.gif" 
-       alt="Fatman background">
+  <canvas id="fatmanCanvas"></canvas>
 
-  <!-- Load gifler library -->
+  <!-- gifler library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gifler/0.1.0/gifler.min.js"></script>
 
   <script>
-    const img = document.getElementById("fatman");
+    const canvas = document.getElementById("fatmanCanvas");
     const breatheGif = "https://CODY-VICK.github.io/homepage/images/fatmanbreathe.gif";
     const lungeGif = "https://CODY-VICK.github.io/homepage/images/fatmanlunge.gif";
     const redirectUrl = "epiccool.html";
     let clicked = false;
 
-    // Function to calculate GIF duration
-    function getGifDuration(url) {
-      return new Promise((resolve) => {
-        gifler(url).get((anim) => {
-          const duration = anim._frames.reduce((sum, f) => sum + f.delay, 0);
-          resolve(duration * 10); // convert from hundredths to ms
-        });
-      });
-    }
+    // Play the initial "breathing" GIF
+    let breatheAnim;
+    gifler(breatheGif).get((anim) => {
+      breatheAnim = anim;
+      anim.animateInCanvas(canvas);
+      anim.play();
+    });
 
-    img.addEventListener("click", async () => {
+    // Handle click
+    canvas.addEventListener("click", () => {
       if (clicked) return;
       clicked = true;
 
-      img.src = lungeGif;
+      // Stop the current breathing animation
+      if (breatheAnim) breatheAnim.stop();
 
-      // Measure duration
-      const duration = await getGifDuration(lungeGif);
+      // Load and play the lunge GIF
+      gifler(lungeGif).get((anim) => {
+        anim.animateInCanvas(canvas);
+        anim.onDrawFrame = (ctx, frame) => {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.drawImage(frame.buffer, 0, 0, canvas.width, canvas.height);
+        };
 
-      // Redirect after GIF completes
-      setTimeout(() => {
-        window.location.href = redirectUrl;
-      }, duration);
+        // Calculate total duration of the GIF
+        const duration = anim._frames.reduce((sum, f) => sum + f.delay, 0) * 10;
+
+        // Start animation and schedule redirect
+        anim.play();
+
+        setTimeout(() => {
+          window.location.href = redirectUrl;
+        }, duration);
+      });
     });
   </script>
 </body>
 </html>
-
-
