@@ -6,44 +6,19 @@
   <title>Repeating GIF Background</title>
   <style>
     html, body {
+      height: 100%;
       margin: 0;
       padding: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background: black; /* fallback */
     }
 
-    .tile {
-      position: absolute;
-      background-image: url('thetruth.gif');
-      background-size: cover; /* covers the div */
-      background-repeat: no-repeat;
-      width: 200px;  /* adjust to your GIF's width */
-      height: 200px; /* adjust to your GIF's height */
-      pointer-events: none; /* so you can still click things above */
+    body {
+      background-image: url('https://CODY-VICK.github.io/homepage/images/thetruth.gif');
+      background-repeat: repeat; /* This makes the GIF repeat */
+      background-size: auto; /* Keeps original size */
+      background-position: top left;
     }
   </style>
 </head>
 <body>
-  <script>
-    const tileWidth = 200;  // GIF width
-    const tileHeight = 200; // GIF height
-    const cols = Math.ceil(window.innerWidth / tileWidth);
-    const rows = Math.ceil(window.innerHeight / tileHeight);
-
-    for (let y = 0; y < rows; y++) {
-      for (let x = 0; x < cols; x++) {
-        const div = document.createElement('div');
-        div.className = 'tile';
-        div.style.left = `${x * tileWidth}px`;
-        div.style.top = `${y * tileHeight}px`;
-        document.body.appendChild(div);
-      }
-    }
-
-    // Optional: handle window resize
-    window.addEventListener('resize', () => location.reload());
-  </script>
 </body>
 </html>
