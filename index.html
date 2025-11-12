@@ -35,22 +35,20 @@
   <script>
     const img = document.getElementById("fatman");
     const breatheGif = "https://CODY-VICK.github.io/homepage/images/fatmanbreathe.gif";
-    const lungeGif = "https://CODY-VICK.github.io/homepage/images/fatmanlunge.gif";
+    const lungeGifBase = "https://CODY-VICK.github.io/homepage/images/fatmanlunge.gif";
     const redirectUrl = "epiccool.html";
 
-    // Updated duration to 2.6 seconds
-    const lungeDuration = 2600;
-
+    const lungeDuration = 2400; // Duration of lunge GIF in ms
     let clicked = false;
 
     img.addEventListener("click", () => {
       if (clicked) return;
       clicked = true;
 
-      // Switch to the lunge GIF
+      // Force GIF to start from first frame by appending timestamp
+      const lungeGif = `${lungeGifBase}?t=${Date.now()}`;
       img.src = lungeGif;
 
-      // Redirect after lunge GIF finishes
       setTimeout(() => {
         window.location.href = redirectUrl;
       }, lungeDuration);
