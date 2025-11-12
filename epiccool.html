@@ -10,7 +10,7 @@
       padding: 0;
       overflow: hidden;
       height: 100%;
-      background: #000; /* black background */
+      background: #000; /* fallback if canvas fails */
     }
 
     canvas {
@@ -44,7 +44,6 @@
     const runner = Runner.create();
     Runner.run(runner, engine);
 
-    // Boundaries (floor, walls)
     const walls = [
       Bodies.rectangle(window.innerWidth / 2, window.innerHeight + 25, window.innerWidth, 50, { isStatic: true }),
       Bodies.rectangle(-25, window.innerHeight / 2, 50, window.innerHeight, { isStatic: true }),
@@ -53,7 +52,6 @@
     ];
     World.add(world, walls);
 
-    // Helper: create image bodies
     function createImage(x, y, width, height, imgSrc) {
       const body = Bodies.rectangle(x, y, width, height, {
         render: {
@@ -68,8 +66,7 @@
       return body;
     }
 
-    // Add images as draggable moveable objects
-    const images = [
+ const images = [
   createImage(200, 100, 150, 100, 'https://CODY-VICK.github.io/homepage/images/doom.png'),
   createImage(500, 50, 150, 100, 'https://CODY-VICK.github.io/homepage/images/face.png'),
   createImage(800, 150, 150, 100, 'https://CODY-VICK.github.io/homepage/images/faces.png'),
@@ -78,19 +75,15 @@
   createImage(1700, 60, 150, 100, 'https://CODY-VICK.github.io/homepage/images/sir.png')
 ];
 
-    // Add mouse drag control
+
     const mouse = Mouse.create(render.canvas);
     const mouseConstraint = MouseConstraint.create(engine, {
       mouse,
-      constraint: {
-        stiffness: 0.2,
-        render: { visible: false }
-      }
+      constraint: { stiffness: 0.2, render: { visible: false } }
     });
     World.add(world, mouseConstraint);
     render.mouse = mouse;
 
-    // Handle window resize responsively
     window.addEventListener('resize', () => {
       Render.lookAt(render, {
         min: { x: 0, y: 0 },
