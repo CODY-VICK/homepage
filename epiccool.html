@@ -18,7 +18,7 @@
       display: block;
       width: 100%;
       height: 100%;
-      z-index: 1; /* above background, below HTML text if needed */
+      z-index: 1;
       position: relative;
     }
 
@@ -33,7 +33,7 @@
       cursor: pointer;
       user-select: none;
       text-shadow: 2px 2px 4px #000;
-      z-index: 10; /* stays above canvas */
+      z-index: 10;
     }
   </style>
 </head>
@@ -72,22 +72,17 @@
     ];
     World.add(world, walls);
 
-    // Function to create image bodies
+    // Create image bodies
     function createImage(x, y, width, height, imgSrc) {
       const body = Bodies.rectangle(x, y, width, height, {
         render: {
-          sprite: {
-            texture: imgSrc,
-            xScale: width / 300,
-            yScale: height / 200
-          }
+          sprite: { texture: imgSrc, xScale: width / 300, yScale: height / 200 }
         }
       });
       World.add(world, body);
       return body;
     }
 
-    // Images
     const images = [
       createImage(200, 100, 120, 80, 'https://CODY-VICK.github.io/homepage/images/doom.png'),
       createImage(500, 50, 120, 80, 'https://CODY-VICK.github.io/homepage/images/face.png'),
@@ -106,7 +101,7 @@
     World.add(world, mouseConstraint);
     render.mouse = mouse;
 
-    // Draw "THE TRUTH" behind images on every frame
+    // Draw "THE TRUTH" **behind the images**
     Events.on(render, 'beforeRender', () => {
       const ctx = render.context;
       ctx.save();
@@ -117,38 +112,31 @@
       ctx.restore();
     });
 
-    // Resize handling
+    // Resize
     window.addEventListener('resize', () => {
-      Render.lookAt(render, {
-        min: { x: 0, y: 0 },
-        max: { x: window.innerWidth, y: window.innerHeight }
-      });
+      Render.lookAt(render, { min: { x: 0, y: 0 }, max: { x: window.innerWidth, y: window.innerHeight } });
     });
 
     // Title click
-    const title = document.getElementById('title');
-    title.onclick = () => {
+    document.getElementById('title').onclick = () => {
       window.location.href = 'https://www.instagram.com/if_you_find_him/';
     };
 
-    // Make canvas text clickable using mouse events
+    // Canvas click to detect "THE TRUTH"
     render.canvas.addEventListener('click', function(event) {
       const x = event.clientX;
       const y = event.clientY;
-
-      // Simple bounding box for "THE TRUTH"
       const textX = window.innerWidth / 2;
       const textY = window.innerHeight - 80;
-      const textWidth = 400; // approx width of text
-      const textHeight = 80; // approx height of text
+      const textWidth = 400;
+      const textHeight = 80;
 
-      if (x >= textX - textWidth/2 && x <= textX + textWidth/2 &&
-          y >= textY - textHeight/2 && y <= textY + textHeight/2) {
+      if (x >= textX - textWidth / 2 && x <= textX + textWidth / 2 &&
+          y >= textY - textHeight / 2 && y <= textY + textHeight / 2) {
         window.location.href = 'the_truth.html';
       }
     });
   </script>
 </body>
 </html>
-
 
